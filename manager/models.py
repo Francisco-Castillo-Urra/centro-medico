@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 # Create your models here.
 
 
@@ -18,11 +19,13 @@ class Rol(models.Model):
 
 
 class Usuario(models.Model):
-    nombre_usuario = models.CharField('Nombre de usuario', max_length=50)
-    contraseña_usuario = models.CharField('Contraseña', max_length=30)
+    nombre_usuario = models.CharField('Nombre de usuario', max_length=50,unique=True,blank=False,null=False)
+    contraseña_usuario = models.CharField('Contraseña', max_length=30, blank=False,null=False)
     estado_usuario = models.BooleanField(default=False)
     rol = models.ForeignKey(Rol, on_delete=models.PROTECT, default=1)
     fecha_ultimo_ingreso = models.DateField(blank=True, null=True)
+    #USERNAME_FIELD = "nombre_usuario"
+    #PASSWORD_FIELD = "contraseña_usuario"
 
     def __str__(self):
         return self.nombre_usuario
