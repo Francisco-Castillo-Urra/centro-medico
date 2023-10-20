@@ -13,8 +13,26 @@
     <title>Registro</title>
 </head>
 <body>
-    <a href="javascript:history.back()">Volver a la pagina principal</a>
     {% load crispy_forms_tags %}
+    <div class="w3-top">
+        <div class="w3-bar w3-red w3-card w3-left-align w3-large">
+            <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red"
+                href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i
+                    class="fa fa-bars"></i></a>
+            <a href="#" class="w3-bar-item w3-button w3-padding-large w3-white">Pagina principal</a>
+            {% if user.is_authenticated%}
+            <a href="{% url 'logout'%}"
+                class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Cerrar sesion</a>
+            <a href="#"
+                class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">@{{user.username}}</a>
+            {% else %}
+            <a href="{% url 'registrousuario' %}"
+                class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Registro</a>
+            <a href="{% url 'login'%}"
+                class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Iniciar sesion</a>
+            {% endif %}
+
+        </div>  
     <div class="row">
         <div class="col-12 col-md-6 offset-md3">
             <div class="card">
@@ -27,7 +45,7 @@
                         <br>
                         <hr>
                         <button type="submit" id="btRegistrar" class="btn btn-primary">Registrar</button>
-                        <button class="btn btn-secondary" onclick="javascript:history.back()">Volver</button>
+                        <a href="{% url 'home' %}">Volver</a>
                     </form>
                     {{mensaje}}
                 </div>
