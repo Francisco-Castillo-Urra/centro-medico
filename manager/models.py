@@ -1,6 +1,7 @@
+from typing import Any
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 # Create your models here.
 
 
@@ -18,14 +19,40 @@ class Rol(models.Model):
         return self.nombre_rol
 
 
-class Usuario(models.Model):
-    nombre_usuario = models.CharField('Nombre de usuario', max_length=50,unique=True,blank=False,null=False)
-    contraseña_usuario = models.CharField('Contraseña', max_length=30, blank=False,null=False)
+class CustomUserManager(UserManager):
+    def _create_user(self, password, **extra_fields):
+        user = self.model(**extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+
+    def create_user(self, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user( password, **extra_fields)
+
+    def create_superuser(self, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self._create_user( password, **extra_fields)
+
+
+class Usuario(AbstractBaseUser, PermissionsMixin):
+    nombre_usuario = models.CharField('Nombre de usuario', max_length=50, unique=True, blank=True, null=False)
     estado_usuario = models.BooleanField(default=False)
     rol = models.ForeignKey(Rol, on_delete=models.PROTECT, default=1)
-    fecha_ultimo_ingreso = models.DateField(blank=True, null=True)
-    #USERNAME_FIELD = "nombre_usuario"
-    #PASSWORD_FIELD = "contraseña_usuario"
+    is_active = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+    fecha_ultimo_ingreso = models.DateTimeField(blank=True, null=True)
+    objects = CustomUserManager()
+    USERNAME_FIELD = "nombre_usuario"
+    REQUIRED_FIELDS=[]
+
+    class Meta:
+        verbose_name = 'Usuario'
+        verbose_name_plural = 'Usuarios'
 
     def __str__(self):
         return self.nombre_usuario
@@ -42,11 +69,15 @@ class Profesional(models.Model):
     email_pro = models.EmailField('Email', max_length=50)
     tarifa = models.IntegerField('Tarifa')
     estado_pro = models.BooleanField('Estado')
-    fecha_registro_pro = models.DateField('Fecha de registro', default=timezone.now)
+    fecha_registro_pro = models.DateField(
+        'Fecha de registro', default=timezone.now)
     id_ciudad = models.ForeignKey(Ciudad, on_delete=models.PROTECT)
     id_usuario = models.ForeignKey(
         Usuario, null=True, on_delete=models.PROTECT)
 
+    class Meta:
+        verbose_name = 'Profesional'
+        verbose_name_plural = 'Profesionales'
     def __str__(self):
         return self.primer_nombre + self.segundo_nombre + self.apellido_paterno + self.apellido_paterno
 
@@ -64,16 +95,20 @@ class Paciente(models.Model):
     segundo_nombre_pac = models.CharField('Segundo nombre', max_length=50)
     apellido_paterno_pac = models.CharField('Apellido paterno', max_length=50)
     apellido_materno_pac = models.CharField('Apellido materno', max_length=50)
-    orden_apellido = models.BooleanField('Invertir el orden de los apellidos', default=False)
+    orden_apellido = models.BooleanField(
+        'Invertir el orden de los apellidos', default=False)
     fecha_nac = models.DateField('Fecha de nacimiento')
     direccion_pac = models.CharField('Direccion', max_length=50)
     celular_pac = models.IntegerField('Celular')
     email_pac = models.EmailField('Email', max_length=50)
     prevision = models.ForeignKey(Prevision, on_delete=models.PROTECT)
     estado_pac = models.BooleanField('Estado')
-    fecha_registro_pac = models.DateField('Fecha de registro', default=timezone.now)
-    nombre_social = models.CharField('Nombre social', max_length=50, blank=True, null=True)
-    id_usuario = models.ForeignKey(Usuario, blank=True, null=True, on_delete=models.PROTECT)
+    fecha_registro_pac = models.DateField(
+        'Fecha de registro', default=timezone.now)
+    nombre_social = models.CharField(
+        'Nombre social', max_length=50, blank=True, null=True)
+    id_usuario = models.ForeignKey(
+        Usuario, blank=True, null=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.primer_nombre_pac + ' ' + self.segundo_nombre_pac+' ' + self.apellido_paterno_pac + ' '+self.apellido_materno_pac

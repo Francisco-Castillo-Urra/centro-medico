@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from .models import Paciente
-from .forms import registro_usuario, CustomUserCreationForm
+from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login
 # Create your views here.
