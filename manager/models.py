@@ -42,7 +42,7 @@ class Profesional(models.Model):
     email_pro = models.EmailField('Email', max_length=50)
     tarifa = models.IntegerField('Tarifa')
     estado_pro = models.BooleanField('Estado')
-    fecha_registro_pro = models.DateField('Fecha de registro', default=timezone.now())
+    fecha_registro_pro = models.DateField('Fecha de registro', default=timezone.now)
     id_ciudad = models.ForeignKey(Ciudad, on_delete=models.PROTECT)
     id_usuario = models.ForeignKey(
         Usuario, null=True, on_delete=models.PROTECT)
@@ -71,7 +71,7 @@ class Paciente(models.Model):
     email_pac = models.EmailField('Email', max_length=50)
     prevision = models.ForeignKey(Prevision, on_delete=models.PROTECT)
     estado_pac = models.BooleanField('Estado')
-    fecha_registro_pac = models.DateField('Fecha de registro', default=timezone.now())
+    fecha_registro_pac = models.DateField('Fecha de registro', default=timezone.now)
     nombre_social = models.CharField('Nombre social', max_length=50, blank=True, null=True)
     id_usuario = models.ForeignKey(Usuario, blank=True, null=True, on_delete=models.PROTECT)
 

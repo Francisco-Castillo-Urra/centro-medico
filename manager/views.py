@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .models import Paciente
 from .forms import registro_usuario, CustomUserCreationForm
+from django.contrib import messages
+from django.contrib.auth import authenticate,login
 # Create your views here.
 
 
@@ -12,20 +14,6 @@ def home(request):
     return render(request, 'manager/home.html', data)
 
 
-def registro(request):
-    data = {
-        'form': registro_usuario()
-    }
-    if request.method == 'POST':
-        formulario = registro_usuario(data=request.POST)
-        if formulario.is_valid():
-            formulario.save()
-            data["mensaje"] = "usuario registrado correctamente"
-        else:
-            data["form"] = formulario
-    return render(request, 'manager/registro.html', data)
-
-
 def registrousuario(request):
     data = {
         'form': CustomUserCreationForm()
@@ -34,7 +22,10 @@ def registrousuario(request):
         formulario = CustomUserCreationForm(data=request.POST)
         if formulario.is_valid():
             formulario.save()
-            data["mensaje"] = "Usuario registrado correctamente"
+            user = authenticate(username=formulario.cleaned_data["username"],password= formulario.cleaned_data["password1"])
+            login(request,user)
+            messages.success(request,"Te has registrado correctamente")
+            return redirect(to='home')
         else:
             data['form'] = formulario
     return render(request, 'registration/registrousuario.html',data)
