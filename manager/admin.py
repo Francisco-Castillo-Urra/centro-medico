@@ -1,12 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Paciente, Profesional, Ciudad, Rol, Usuario, Prevision
+from .models import Paciente, Profesional, Ciudad, Usuario, Prevision
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 # Register your models here.
 admin.site.register(Paciente)
 admin.site.register(Profesional)
 admin.site.register(Ciudad)
-admin.site.register(Rol)
 admin.site.register(Prevision)
 
 

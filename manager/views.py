@@ -31,3 +31,6 @@ def registrousuario(request):
         else:
             data['form'] = formulario
     return render(request, 'registration/registrousuario.html', data)
+
+def agendar_hora(request):
+    return render(request,'manager/agendar-hora.html')

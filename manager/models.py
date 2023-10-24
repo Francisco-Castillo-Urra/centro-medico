@@ -13,13 +13,6 @@ class Ciudad(models.Model):
         return self.nombre
 
 
-class Rol(models.Model):
-    nombre_rol = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.nombre_rol
-
-
 class CustomUserManager(UserManager):
     def _create_user(self, password, **extra_fields):
         user = self.model(**extra_fields)
@@ -40,15 +33,14 @@ class CustomUserManager(UserManager):
 
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
-    objects = CustomUserManager()
-    nombre_usuario = models.CharField(
-        'Nombre de usuario', max_length=50, unique=True, blank=True, null=False)
+    
+    nombre_usuario = models.CharField('Nombre de usuario', max_length=50, unique=True, blank=True, null=False)
     estado_usuario = models.BooleanField(default=False)
-    rol = models.ForeignKey(Rol, on_delete=models.PROTECT, default=1)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
+    objects = CustomUserManager()
     USERNAME_FIELD = "nombre_usuario"
     REQUIRED_FIELDS = []
 
