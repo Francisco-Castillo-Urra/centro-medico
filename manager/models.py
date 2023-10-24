@@ -2,6 +2,7 @@ from typing import Any
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
+
 # Create your models here.
 
 
@@ -30,29 +31,26 @@ class CustomUserManager(UserManager):
     def create_user(self, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user( password, **extra_fields)
+        return self._create_user(password, **extra_fields)
 
     def create_superuser(self, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        return self._create_user( password, **extra_fields)
+        return self._create_user(password, **extra_fields)
 
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
-    nombre_usuario = models.CharField('Nombre de usuario', max_length=50, unique=True, blank=True, null=False)
+    objects = CustomUserManager()
+    nombre_usuario = models.CharField(
+        'Nombre de usuario', max_length=50, unique=True, blank=True, null=False)
     estado_usuario = models.BooleanField(default=False)
     rol = models.ForeignKey(Rol, on_delete=models.PROTECT, default=1)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    fecha_ultimo_ingreso = models.DateTimeField(blank=True, null=True)
-    objects = CustomUserManager()
-    USERNAME_FIELD = "nombre_usuario"
-    REQUIRED_FIELDS=[]
 
-    class Meta:
-        verbose_name = 'Usuario'
-        verbose_name_plural = 'Usuarios'
+    USERNAME_FIELD = "nombre_usuario"
+    REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.nombre_usuario
@@ -78,6 +76,7 @@ class Profesional(models.Model):
     class Meta:
         verbose_name = 'Profesional'
         verbose_name_plural = 'Profesionales'
+
     def __str__(self):
         return self.primer_nombre + self.segundo_nombre + self.apellido_paterno + self.apellido_paterno
 
@@ -112,3 +111,40 @@ class Paciente(models.Model):
 
     def __str__(self):
         return self.primer_nombre_pac + ' ' + self.segundo_nombre_pac+' ' + self.apellido_paterno_pac + ' '+self.apellido_materno_pac
+
+
+class Bloque(models.Model):
+    descripcion = models.TextField()
+    estado = models.BooleanField()
+    hora_ini = models.TimeField()
+    hora_fin = models.TimeField()
+
+    def __str__(self):
+        return self.descripcion
+
+
+class Agenda(models.Model):
+    rut_pro = models.ForeignKey(Profesional, on_delete=models.PROTECT)
+    rut_pa = models.ForeignKey(Paciente, on_delete=models.PROTECT)
+    fecha_hora = models.DateField(default=timezone.now)
+    fecha_atencion = models.DateField()
+    estado = models.BooleanField()
+    bloque = models.ForeignKey(Bloque, on_delete=models.PROTECT)
+    tarifa = models.IntegerField()
+
+
+class Box(models.Model):
+    descripcion = models.TextField()
+    valor_mensual = models.IntegerField()
+
+    def __str__(self):
+        return self.descripcion
+
+
+class Contrato(models.Model):
+    fecha_contrato = models.DateField(default=timezone.now)
+    rut_pro = models.ForeignKey(Profesional, on_delete=models.PROTECT)
+    valor_mensual = models.IntegerField()
+    estado = models.BooleanField()
+    fecha_ini = models.DateField()
+    fecha_fin = models.DateField()
