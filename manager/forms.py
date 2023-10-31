@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Usuario, Paciente,Profesional
+from .models import Usuario, Paciente,Profesional,Agenda
 from django.utils import timezone
 
 
@@ -31,3 +31,11 @@ class MedicoForm(forms.ModelForm):
         model = Profesional
         fields = '__all__'
         exclude = ('usuario','fecha_registro_pro')
+
+class AgendaForm(forms.ModelForm):
+    class Meta:
+        model = Agenda
+        fields = '__all__'
+        widgets = {
+            "fecha_atencion": forms.SelectDateWidget()
+        }

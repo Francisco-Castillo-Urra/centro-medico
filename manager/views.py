@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from .models import Paciente
-from .forms import CustomUserCreationForm, PacienteForm, MedicoForm
+from .forms import CustomUserCreationForm, PacienteForm, MedicoForm,AgendaForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -31,11 +31,6 @@ def registrousuariopaciente(request):
         else:
             data['form'] = formulario
     return render(request, 'registration/registrousuario.html', data)
-
-
-@login_required
-def agendar_hora(request):
-    return render(request, 'manager/agendar-hora.html')
 
 
 @login_required
@@ -93,3 +88,18 @@ def registrousuariomedico(request):
         else:
             data['form'] = formulario
     return render(request, 'registration/registrousuario.html', data)
+
+@login_required
+def agendar_hora(request):
+    data = {
+        'form': AgendaForm()
+    }
+    if request.method == 'POST':
+        formulario = AgendaForm(data=request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            messages.success(request, "Hora registrada")
+            return redirect(to='home')
+        else:
+            data['form'] = formulario
+    return render(request, 'manager/agendar-hora.html', data)

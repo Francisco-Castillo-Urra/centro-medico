@@ -93,7 +93,7 @@ class Paciente(models.Model):
         Usuario, on_delete=models.PROTECT, null=True, blank=True)
 
     def __str__(self):
-        return self.rut_paciente + ' ' + self.primer_nombre_pac + ' ' + self.apellido_paterno_pac
+        return str(self.rut_paciente) + ' ' + self.primer_nombre_pac + ' ' + self.apellido_paterno_pac
 
 
 class Bloque(models.Model):
@@ -112,7 +112,7 @@ class Agenda(models.Model):
     bloque = models.ForeignKey(Bloque, on_delete=models.PROTECT)
     tarifa = models.IntegerField()
     def __str__(self):
-        return self.rut_pa + ' ' + self.rut_pa + ' ' + self.fecha_atencion
+        return str(self.rut_pa) + ' ' + str(self.rut_pa) + ' ' + self.fecha_atencion
 
 class Box(models.Model):
     descripcion = models.TextField()
