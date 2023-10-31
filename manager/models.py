@@ -60,10 +60,9 @@ class Profesional(models.Model):
         'Fecha de registro', default=timezone.now)
 
     usuario = models.OneToOneField(Usuario, on_delete=models.PROTECT)
+    def __str__(self):
+        return str(self.rut_pro) + ' ' + self.primer_nombre_pro + ' ' + self.apellido_paterno_pro
 
-    class Meta:
-        verbose_name = 'Profesional'
-        verbose_name_plural = 'Profesionales'
 
 
 class Prevision(models.Model):
@@ -101,6 +100,8 @@ class Bloque(models.Model):
     descripcion = models.TextField()
     hora_ini = models.TimeField()
     hora_fin = models.TimeField()
+    def __str__(self):
+        return self.descripcion
 
 
 class Agenda(models.Model):
@@ -110,12 +111,14 @@ class Agenda(models.Model):
     fecha_atencion = models.DateField()
     bloque = models.ForeignKey(Bloque, on_delete=models.PROTECT)
     tarifa = models.IntegerField()
-
+    def __str__(self):
+        return self.rut_pa + ' ' + self.rut_pa + ' ' + self.fecha_atencion
 
 class Box(models.Model):
     descripcion = models.TextField()
     valor_mensual = models.IntegerField()
-
+    def __str__(self):
+        return self.descripcion
 
 class Contrato(models.Model):
     fecha_contrato = models.DateField(default=timezone.now)
@@ -123,3 +126,5 @@ class Contrato(models.Model):
     valor_mensual = models.IntegerField()
     fecha_ini = models.DateField()
     fecha_fin = models.DateField()
+    def __str__(self):
+        return self.rut_pro + ' ' + self.fecha_ini + ' ' + self.fecha_fin
