@@ -35,7 +35,8 @@ class MedicoForm(forms.ModelForm):
 class AgendaForm(forms.ModelForm):
     class Meta:
         model = Agenda
-        fields = '__all__'
+        fields = ('__all__')
+        exclude = ('fecha_hora','tarifa')
         widgets = {
             "fecha_atencion": forms.SelectDateWidget()
         }

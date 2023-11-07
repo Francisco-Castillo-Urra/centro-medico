@@ -97,6 +97,7 @@ def agendar_hora(request):
     if request.method == 'POST':
         formulario = AgendaForm(data=request.POST)
         if formulario.is_valid():
+            formulario.instance.rut_pa 
             formulario.save()
             messages.success(request, "Hora registrada")
             return redirect(to='home')
