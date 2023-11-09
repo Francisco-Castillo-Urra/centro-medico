@@ -56,9 +56,7 @@ class Profesional(models.Model):
     direccion_pro = models.CharField('Direccion', max_length=50)
     celular_pro = models.IntegerField('Celular')
     tarifa = models.IntegerField('Tarifa')
-    fecha_registro_pro = models.DateField(
-        'Fecha de registro', default=timezone.now)
-
+    fecha_registro_pro = models.DateField('Fecha de registro', default=timezone.now)
     usuario = models.OneToOneField(Usuario, on_delete=models.PROTECT)
     def __str__(self):
         return str(self.rut_pro) + ' ' + self.primer_nombre_pro + ' ' + self.apellido_paterno_pro
@@ -105,14 +103,14 @@ class Bloque(models.Model):
 
 
 class Agenda(models.Model):
-    rut_pro = models.ForeignKey(Profesional, on_delete=models.PROTECT)
-    rut_pa = models.ForeignKey(Paciente, on_delete=models.PROTECT)
+    medico = models.ForeignKey(Profesional, on_delete=models.PROTECT)
+    paciente = models.ForeignKey(Paciente, on_delete=models.PROTECT)
     fecha_hora = models.DateField(default=timezone.now)
     fecha_atencion = models.DateField()
     bloque = models.ForeignKey(Bloque, on_delete=models.PROTECT)
     tarifa = models.IntegerField()
     def __str__(self):
-        return str(self.rut_pa) + ' ' + str(self.rut_pa) + ' ' + self.fecha_atencion
+        return str(self.rut_pa) + ' ' + str(self.rut_pa) + ' ' + str(self.fecha_atencion)
 
 class Box(models.Model):
     descripcion = models.TextField()

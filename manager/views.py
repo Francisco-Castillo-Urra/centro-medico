@@ -91,13 +91,16 @@ def registrousuariomedico(request):
 
 @login_required
 def agendar_hora(request):
+    usuario = request.user
     data = {
         'form': AgendaForm()
     }
     if request.method == 'POST':
         formulario = AgendaForm(data=request.POST)
         if formulario.is_valid():
-            formulario.instance.rut_pa 
+            formulario.instance.rut_pa = usuario.paciente
+            medico = formulario.cleaned_data['rut_pro']
+            formulario.instance.tarifa = medico.tarifa
             formulario.save()
             messages.success(request, "Hora registrada")
             return redirect(to='home')
