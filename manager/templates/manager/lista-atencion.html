@@ -1,0 +1,23 @@
+{% extends 'manager/base.html' %}
+{% block contenido %}
+<title>Lista de atencion</title>
+<style>
+    .container {
+        text-align: center;
+        padding: 20px;
+    }
+</style>
+<br><br>
+<div class="container">
+    <h1>Listado de Pacientes</h1>
+    {% for p in pacientes %}
+    <div>
+        <div>
+            <span class="paciente">{{ p.paciente }}</span>
+            <input type="button" value="Atendido">
+        </div>
+        <span class="bloque">{{ p.bloque }}</span>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

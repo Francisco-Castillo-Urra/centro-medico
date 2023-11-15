@@ -36,7 +36,7 @@ class AgendaForm(forms.ModelForm):
     class Meta:
         model = Agenda
         fields = ('__all__')
-        exclude = ('fecha_hora','tarifa','rut_pa',)
+        exclude = ('fecha_hora','paciente','tarifa')
         widgets = {
             "fecha_atencion": forms.SelectDateWidget()
         }

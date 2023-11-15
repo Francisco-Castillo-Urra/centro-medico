@@ -57,9 +57,9 @@ class Profesional(models.Model):
     celular_pro = models.IntegerField('Celular')
     tarifa = models.IntegerField('Tarifa')
     fecha_registro_pro = models.DateField('Fecha de registro', default=timezone.now)
-    usuario = models.OneToOneField(Usuario, on_delete=models.PROTECT)
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     def __str__(self):
-        return str(self.rut_pro) + ' ' + self.primer_nombre_pro + ' ' + self.apellido_paterno_pro
+        return self.primer_nombre_pro + ' ' + self.apellido_paterno_pro + ' ' + self.apellido_materno_pro
 
 
 
@@ -88,7 +88,7 @@ class Paciente(models.Model):
     nombre_social = models.CharField(
         'Nombre social', max_length=50, blank=True, null=True)
     usuario = models.OneToOneField(
-        Usuario, on_delete=models.PROTECT, null=True, blank=True)
+        Usuario, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return str(self.rut_paciente) + ' ' + self.primer_nombre_pac + ' ' + self.apellido_paterno_pac
@@ -109,8 +109,14 @@ class Agenda(models.Model):
     fecha_atencion = models.DateField()
     bloque = models.ForeignKey(Bloque, on_delete=models.PROTECT)
     tarifa = models.IntegerField()
+    atendido = models.BooleanField(default=False)
+    pagado = models.BooleanField(default=False)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['fecha_atencion','bloque','medico'], name='pk_constraint')
+        ]
     def __str__(self):
-        return str(self.rut_pa) + ' ' + str(self.rut_pa) + ' ' + str(self.fecha_atencion)
+        return str(self.medico) + ' ' + str(self.paciente) + ' ' + str(self.fecha_atencion)
 
 class Box(models.Model):
     descripcion = models.TextField()

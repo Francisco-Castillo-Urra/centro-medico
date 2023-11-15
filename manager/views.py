@@ -4,6 +4,7 @@ from .forms import CustomUserCreationForm, PacienteForm, MedicoForm,AgendaForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from .models import Agenda
 # Create your views here.
 
 
@@ -62,7 +63,7 @@ def datos_medico(request):
     if formulario.is_valid():
         formulario.instance.usuario = usuario
         formulario.save()
-        messages.success(request, "Sus datos se han guardado correctamente")
+        messages.success(request, "Los datos del medico han guardado correctamente")
         return redirect(to='home')
 
     else:
@@ -83,7 +84,7 @@ def registrousuariomedico(request):
             user = authenticate(
                 username=formulario.cleaned_data["email"], password=formulario.cleaned_data["password1"])
             login(request, user)
-            messages.success(request, "Te has registrado correctamente")
+            messages.success(request, "Medico registrado correctamente")
             return redirect(to='datosmedico')
         else:
             data['form'] = formulario
@@ -98,8 +99,8 @@ def agendar_hora(request):
     if request.method == 'POST':
         formulario = AgendaForm(data=request.POST)
         if formulario.is_valid():
-            formulario.instance.rut_pa = usuario.paciente
-            medico = formulario.cleaned_data['rut_pro']
+            formulario.instance.paciente = usuario.paciente   
+            medico = formulario.cleaned_data['medico']
             formulario.instance.tarifa = medico.tarifa
             formulario.save()
             messages.success(request, "Hora registrada")
@@ -107,3 +108,11 @@ def agendar_hora(request):
         else:
             data['form'] = formulario
     return render(request, 'manager/agendar-hora.html', data)
+
+@login_required
+def listar_por_atender(request):
+    agenda = Agenda.objects.all()
+    data = {
+        'pacientes': agenda
+    }
+    return render(request, 'manager/lista-atencion.html',data)
