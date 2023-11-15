@@ -36,7 +36,10 @@ class AgendaForm(forms.ModelForm):
     class Meta:
         model = Agenda
         fields = ('__all__')
-        exclude = ('fecha_hora','paciente','tarifa')
+        exclude = ('fecha_hora','paciente','atendido','pagado','tarifa')
         widgets = {
             "fecha_atencion": forms.SelectDateWidget()
         }
+
+class MarcarAtendidoForm(forms.Form):
+    paciente = forms.IntegerField(widget=forms.HiddenInput())

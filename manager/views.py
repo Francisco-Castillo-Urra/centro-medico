@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .models import Agenda
+from django.utils import timezone
+from datetime import datetime
 # Create your views here.
 
 
@@ -111,7 +113,9 @@ def agendar_hora(request):
 
 @login_required
 def listar_por_atender(request):
+    fecha_actual = timezone.now().date()
     agenda = Agenda.objects.all()
+    agenda_hoy = [a for a in agenda if a.fecha_atencion == fecha_actual]
     data = {
         'pacientes': agenda
     }
