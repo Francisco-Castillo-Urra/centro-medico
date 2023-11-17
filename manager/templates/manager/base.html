@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
@@ -41,12 +41,20 @@
             class="fa fa-bars"></i></a>
         <a href="{% url 'home'%}" class="w3-bar-item w3-button w3-padding-large w3-white">Pagina principal</a>
         {% if user.is_authenticated %}
-        {% if user.is_staff == True%}
+        {% if user.is_staff == True and user.is_superuser == False%}
         <a href="{% url 'poratender' %}"
-        class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Lista de atencion</a>
+          class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Atenciones de hoy</a>
+        <a href="{% url 'listaatencion' %}"
+          class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Lista de atencion</a>
         {% elif user.is_superuser == True %}
         <a href="{% url 'registromedico' %}"
           class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Registrar medico</a>
+
+        <a href="{% url 'registrosecretaria' %}"
+          class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Registrar secretaria</a>
+
+        <a href="{% url 'listaatencion' %}"
+          class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Horas pendientes de pago</a>
         {% elif user.is_staff == False %}
         <a href="{% url 'agendarhora' %}" class="w3-bar-item w3-button w3-padding-large">Agendar hora</a>
         {% endif %}
