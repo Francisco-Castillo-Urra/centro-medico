@@ -17,7 +17,6 @@ class CustomUserChangeForm(UserCreationForm):
 
 
 class PacienteForm(forms.ModelForm):
-
     class Meta:
         model = Paciente
         fields = '__all__'
@@ -38,7 +37,7 @@ class AgendaForm(forms.ModelForm):
     class Meta:
         model = Agenda
         fields = '__all__'
-        exclude = ('fecha_hora', 'paciente', 'atendido', 'pagado','tarifa')
+        exclude = ('fecha_hora', 'paciente', 'atendido', 'pagado', 'tarifa')
         widgets = {
             "fecha_atencion": forms.SelectDateWidget(),
         }

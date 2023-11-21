@@ -1,17 +1,17 @@
 from django.shortcuts import redirect, render
-from .models import Paciente
+from .models import Ciudad
 from .forms import CustomUserCreationForm, PacienteForm, MedicoForm, AgendaForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .models import Agenda
 from django.utils import timezone
-from datetime import datetime
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
-
-
+import requests
 # Mostrar el home
+
+
 def home(request):
     return render(request, 'manager/home.html')
 
@@ -40,21 +40,22 @@ def registrousuariopaciente(request):
 # Registrar los datos del paciente
 @login_required
 def datos_paciente(request):
-    usuario = request.user
-    data = {
-        'form': PacienteForm(),
-    }
-    formulario = PacienteForm(data=request.POST)
-    if formulario.is_valid():
-        formulario.instance.usuario = usuario
-        formulario.save()
-        messages.success(request, "Sus datos se han guardado correctamente")
-        return redirect(to='home')
+        usuario = request.user
+        data = {
+            'form': PacienteForm(),
+        }
+        formulario = PacienteForm(data=request.POST)
+        if formulario.is_valid():
+            formulario.instance.usuario = usuario
+            formulario.save()
+            messages.success(
+                request, "Sus datos se han guardado correctamente")
+            return redirect(to='home')
 
-    else:
-        data['form'] = formulario
+        else:
+            data['form'] = formulario
 
-    return render(request, 'manager/paciente.html', data)
+        return render(request, 'manager/paciente.html', data)
 
 
 ### Datos medicos###
