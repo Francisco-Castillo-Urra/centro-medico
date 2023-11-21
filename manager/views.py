@@ -1,5 +1,4 @@
 from django.shortcuts import redirect, render
-from .models import Ciudad
 from .forms import CustomUserCreationForm, PacienteForm, MedicoForm, AgendaForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -8,7 +7,7 @@ from .models import Agenda
 from django.utils import timezone
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
-import requests
+from django.core.mail import send_mail
 # Mostrar el home
 
 
@@ -40,22 +39,22 @@ def registrousuariopaciente(request):
 # Registrar los datos del paciente
 @login_required
 def datos_paciente(request):
-        usuario = request.user
-        data = {
-            'form': PacienteForm(),
-        }
-        formulario = PacienteForm(data=request.POST)
-        if formulario.is_valid():
-            formulario.instance.usuario = usuario
-            formulario.save()
-            messages.success(
-                request, "Sus datos se han guardado correctamente")
-            return redirect(to='home')
+    usuario = request.user
+    data = {
+        'form': PacienteForm(),
+    }
+    formulario = PacienteForm(data=request.POST)
+    if formulario.is_valid():
+        formulario.instance.usuario = usuario
+        formulario.save()
+        messages.success(
+            request, "Sus datos se han guardado correctamente")
+        return redirect(to='home')
 
-        else:
-            data['form'] = formulario
+    else:
+        data['form'] = formulario
 
-        return render(request, 'manager/paciente.html', data)
+    return render(request, 'manager/paciente.html', data)
 
 
 ### Datos medicos###
@@ -118,6 +117,13 @@ def agendar_hora(request):
             formulario.instance.tarifa = medico.tarifa
             formulario.save()
             messages.success(request, "Hora registrada")
+            subject = 'Hora registrada'
+            message = 'Su hora fue registrada correctamente con los siguentes datos ' + \
+                formulario.instance.paciente.primer_nombre_pac + ' ' + \
+                formulario.instance.paciente.primer_nombre_pac
+            from_email = 'franciscocastillourra@gmail.com'
+            recipient_list = [usuario.email]
+            send_mail(subject, message, from_email, recipient_list)
             return redirect(to='home')
         else:
             data['form'] = formulario
@@ -195,3 +201,14 @@ def registrousariosecretaria(request):
         else:
             data['form'] = formulario
     return render(request, 'registration/registrousuario.html', data)
+
+
+def enviar_correo(request):
+    subject = 'Asunto del correo'
+    message = 'Cuerpo del correo.'
+    from_email = 'tu_email@gmail.com'
+    recipient_list = ['destinatario@example.com']
+
+    send_mail(subject, message, from_email, recipient_list)
+
+    return messages.success(request, 'Correo enviado')
