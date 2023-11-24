@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
+from decouple import config
 # Mostrar el home
 
 
@@ -118,10 +119,12 @@ def agendar_hora(request):
             formulario.save()
             messages.success(request, "Hora registrada")
             subject = 'Hora registrada'
-            message = 'Su hora fue registrada correctamente con los siguentes datos ' + \
-                formulario.instance.paciente.primer_nombre_pac + ' ' + \
-                formulario.instance.paciente.primer_nombre_pac
-            from_email = 'franciscocastillourra@gmail.com'
+            message = f'Su hora fue registrada correctamente con los siguentes datos: Nombre del paciente {
+                formulario.instance.paciente.primer_nombre_pac} Medico {
+                formulario.instance.medico.primer_nombre_pro} Fecha {
+                formulario.instance.fecha_atencion} Tarifa {
+                formulario.instance.tarifa} '
+            from_email = config('EMAIL_HOST_USER')
             recipient_list = [usuario.email]
             send_mail(subject, message, from_email, recipient_list)
             return redirect(to='home')
@@ -202,13 +205,3 @@ def registrousariosecretaria(request):
             data['form'] = formulario
     return render(request, 'registration/registrousuario.html', data)
 
-
-def enviar_correo(request):
-    subject = 'Asunto del correo'
-    message = 'Cuerpo del correo.'
-    from_email = 'tu_email@gmail.com'
-    recipient_list = ['destinatario@example.com']
-
-    send_mail(subject, message, from_email, recipient_list)
-
-    return messages.success(request, 'Correo enviado')
