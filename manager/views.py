@@ -179,7 +179,7 @@ def marcar_pagado(request, agenda_id):
     agenda = get_object_or_404(Agenda, id=agenda_id)
     agenda.pagado = True
     agenda.save()
-    return redirect(reverse('listaagenda'))
+    return redirect(reverse('listasecretaria'))
 
 
 ### Secretaria###

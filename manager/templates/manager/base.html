@@ -1,116 +1,78 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <style>
-    body,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-family: "Lato", sans-serif
-    }
-
-    .w3-bar,
-    h1,
-    button {
-      font-family: "Montserrat", sans-serif
-    }
-
-    .fa-anchor,
-    .fa-coffee {
-      font-size: 200px
-    }
-  </style>
-</head>
-
-<body>
-  <div>
-    <div class="w3-top">
-      <div class="w3-bar w3-red w3-card w3-left-align w3-large">
-        <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red"
-          href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i
-            class="fa fa-bars"></i></a>
-        <a href="{% url 'home'%}" class="w3-bar-item w3-button w3-padding-large w3-white">Pagina principal</a>
-        {% if user.is_authenticated %}
-        {% if user.is_staff == True and user.is_superuser == False%}
-        <a href="{% url 'poratender' %}"
-          class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Atenciones de hoy</a>
-        <a href="{% url 'listaatencion' %}"
-          class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Lista de atencion</a>
-        {% elif user.is_superuser == True %}
-        <a href="{% url 'registromedico' %}"
-          class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Registrar medico</a>
-
-        <a href="{% url 'registrosecretaria' %}"
-          class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Registrar secretaria</a>
-
-        <a href="{% url 'listaatencion' %}"
-          class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Horas pendientes de pago</a>
-        {% elif user.is_staff == False %}
-        <a href="{% url 'agendarhora' %}" class="w3-bar-item w3-button w3-padding-large">Agendar hora</a>
-        {% endif %}
-        <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">@{{user.email}}</a>
-        <a href="{% url 'logout'%}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Cerrar
-          sesion</a>
-        {% else %}
-        <a href="{% url 'registrousuario' %}"
-          class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Registro</a>
-        <a href="{% url 'login'%}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Iniciar
-          sesion</a>
-        {% endif %}
-      </div>
-
-    </div>
-    <!-- Navbar on small screens -->
-    <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
-      <a href="{% url 'home'%}" class="w3-bar-item w3-button w3-padding-large">Pagina principal</a>
-      {% if user.is_authenticated%}
-      <a href="{% url 'logout'%}" class="w3-bar-item w3-button w3-padding-large">Cerrar sesion</a>
-      <a href="{% url 'agendarhora' %}" class="w3-bar-item w3-button w3-padding-large">Agendar hora</a>
-      {% else %}
-      <a href="{% url 'registrousuario' %}" class="w3-bar-item w3-button w3-padding-large">Registro</a>
-      <a href="{% url 'login' %}" class="w3-bar-item w3-button w3-padding-large">Iniciar sesion</a>
-      {% endif %}
-    </div>
-  </div>
-
-  <script>
-    // Used to toggle the menu on small screens when clicking on the menu button
-    function myFunction() {
-      var x = document.getElementById("navDemo");
-      if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-      } else {
-        x.className = x.className.replace(" w3-show", "");
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <style>
+      body,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: 'Lato', sans-serif;
       }
-    }
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <div id="contenido">
-    {% if messages %}
-    {% for m in messages %}
-    <script>
-      Swal.fire({
-        "title": "Felicitaciones",
-        "text": "{{m}}",
-        "icon": "success"
-      })
-    </script>
-    {% endfor%}
-    {% endif %}
-    {% block contenido %}
+      
+      .w3-bar,
+      h1,
+      button {
+        font-family: 'Montserrat', sans-serif;
+      }
+      
+      .fa-anchor,
+      .fa-coffee {
+        font-size: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div class="w3-top">
+        <div class="w3-bar w3-red w3-card w3-left-align w3-large">
+          <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+          <a href="{% url 'home' %}" class="w3-bar-item w3-button w3-padding-large w3-white">Pagina principal</a>
+          {% if user.is_authenticated %}
+            {% if user.is_staff == True and user.is_superuser == False %}
+              <a href="{% url 'poratender' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Atenciones de hoy</a>
+              <a href="{% url 'listaatencion' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Lista de atencion</a>
+            {% elif user.is_superuser == True %}
+              <a href="{% url 'registromedico' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Registrar medico</a>
 
-    {% endblock %}
-  </div>
-</body>
+              <a href="{% url 'registrosecretaria' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Registrar secretaria</a>
 
+              <a href="{% url 'listasecretaria' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Horas pendientes de pago</a>
+            {% elif user.is_staff == False %}
+              <a href="{% url 'agendarhora' %}" class="w3-bar-item w3-button w3-padding-large">Agendar hora</a>
+            {% endif %}
+            <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">@{{ user.email }}</a>
+            <a href="{% url 'logout' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Cerrar sesion</a>
+          {% else %}
+            <a href="{% url 'registrousuario' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Registro</a>
+            <a href="{% url 'login' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Iniciar sesion</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div id="contenido">
+      {% if messages %}
+        {% for m in messages %}
+          <script>
+            Swal.fire({
+              title: 'Felicitaciones',
+              text: '{{m}}',
+              icon: 'success'
+            })
+          </script>
+        {% endfor %}
+      {% endif %}
+      {% block contenido %}
+
+      {% endblock %}
+    </div>
+  </body>
 </html>
