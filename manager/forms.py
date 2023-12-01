@@ -39,7 +39,7 @@ class AgendaForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('fecha_hora', 'paciente', 'atendido', 'pagado', 'tarifa')
         widgets = {
-            "fecha_atencion": forms.SelectDateWidget(),
+            "fecha_atencion": forms.SelectDateWidget(years=range(timezone.now().year , timezone.now().year + 3)),
         }
 
 
