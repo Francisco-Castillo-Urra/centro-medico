@@ -136,6 +136,9 @@ def agendar_hora(request):
 # Listado de todas las atenciones
 @login_required
 def listar_por_atender(request):
+    usuario = request.user
+    if usuario.is_staff == False or usuario.is_superuser == False:
+        return redirect(reverse('home'))
     agenda = Agenda.objects.all()
     data = {
         'pacientes': agenda
@@ -145,6 +148,9 @@ def listar_por_atender(request):
 
 @login_required
 def listar_por_atender_secretaria(request):
+    usuario = request.user
+    if usuario.is_staff == False or usuario.is_superuser == False:
+        return redirect(reverse('home'))
     agenda = Agenda.objects.all()
     data = {
         'pacientes': agenda
@@ -155,6 +161,9 @@ def listar_por_atender_secretaria(request):
 # Listado de las atenciones pendientes del dia
 @login_required
 def listar_por_atender_hoy(request):
+    usuario = request.user
+    if usuario.is_staff == False or usuario.is_superuser == False:
+        return redirect(reverse('home'))
     fecha_actual = timezone.now().date()
     agenda = Agenda.objects.all()
     agenda_hoy = [a for a in agenda if a.fecha_atencion == fecha_actual]
@@ -167,6 +176,9 @@ def listar_por_atender_hoy(request):
 # Marcar horas como atendidas
 @login_required
 def marcar_atendido(request, agenda_id):
+    usuario = request.user
+    if usuario.is_staff == False:
+        return redirect(reverse('home'))
     agenda = get_object_or_404(Agenda, id=agenda_id)
     agenda.atendido = True
     agenda.save()
@@ -176,6 +188,9 @@ def marcar_atendido(request, agenda_id):
 # Marcar horas como pagadas
 @login_required
 def marcar_pagado(request, agenda_id):
+    usuario = request.user
+    if usuario.is_staff == False or usuario.is_superuser == False:
+        return redirect(reverse('home'))
     agenda = get_object_or_404(Agenda, id=agenda_id)
     agenda.pagado = True
     agenda.save()
@@ -187,6 +202,9 @@ def marcar_pagado(request, agenda_id):
 # Registro de secretaria
 @login_required
 def registrousariosecretaria(request):
+    usuario = request.user
+    if usuario.is_staff == False or usuario.is_superuser == False:
+        return redirect(reverse('home'))
     data = {
         'form': CustomUserCreationForm()
     }
@@ -204,4 +222,3 @@ def registrousariosecretaria(request):
         else:
             data['form'] = formulario
     return render(request, 'registration/registrousuario.html', data)
-
