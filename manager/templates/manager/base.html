@@ -46,6 +46,7 @@
               <a href="{% url 'registrosecretaria' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Registrar secretaria</a>
 
               <a href="{% url 'listasecretaria' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Horas pendientes de pago</a>
+              <a href="{% url 'informacion_medicos' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Generar informe</a>
             {% elif user.is_staff == False %}
               <a href="{% url 'agendarhora' %}" class="w3-bar-item w3-button w3-padding-large">Agendar hora</a>
             {% endif %}

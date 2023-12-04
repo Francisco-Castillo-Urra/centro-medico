@@ -1,0 +1,9 @@
+{% extends 'manager/base.html' %}
+{% block contenido %}
+  <title>Informe</title>
+  <br /><br /><br /> <br />
+  {% for a in atenciones %}
+    <ul>Paciente: {{ a.paciente }} Fecha de atencion: {{a.fecha_atencion}} Tarifa de atencion: ${{a.tarifa}}</ul>
+  {% endfor %}
+  <span>Total atenciones ${{ total }}</span>
+{% endblock %}

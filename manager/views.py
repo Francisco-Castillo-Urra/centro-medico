@@ -3,7 +3,7 @@ from .forms import CustomUserCreationForm, PacienteForm, MedicoForm, AgendaForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from .models import Agenda
+from .models import Agenda, Profesional
 from django.utils import timezone
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
@@ -222,3 +222,36 @@ def registrousariosecretaria(request):
         else:
             data['form'] = formulario
     return render(request, 'registration/registrousuario.html', data)
+
+
+@login_required
+def informacion_medicos(request):
+    usuario = request.user
+    if usuario.is_staff == False or usuario.is_superuser == False:
+        return redirect(reverse('home'))
+    medicos = Profesional.objects.all()
+    data = {
+        'medicos': medicos
+    }
+    return render(request, 'manager/informacion-medicos.html', data)
+
+
+@login_required
+def generar_informe(request, medico_id):
+    usuario = request.user
+    if usuario.is_staff == False or usuario.is_superuser == False:
+        return redirect(reverse('home'))
+    medico = get_object_or_404(Profesional, rut_pro=medico_id)
+    agendas = Agenda.objects.all()
+    atenciones = [i for i in agendas if i.medico.rut_pro == medico.rut_pro]
+    atenciones_del_mes = [i for i in atenciones if i.pagado == True and i.fecha_atencion.month == timezone.now(
+    ).month and i.fecha_atencion.year == timezone.now().year]
+    valores_atencion = []
+    for i in atenciones_del_mes:
+        valores_atencion.append(i.tarifa)
+    total = sum(valores_atencion)
+    data = {
+        'atenciones': atenciones_del_mes,
+        'total': total
+    }
+    return render(request, 'manager/informe.html', data)
