@@ -9,15 +9,12 @@
 </style>
 <br><br>
 <div class="container">
-    <h1>Listado de Pacientes</h1>
+    <h1>Proximas atenciones</h1>
     {% for p in pacientes %}
-    <form method="post" action="{% url 'marcar_atendido' agenda_id=p.id %}">
-        {% csrf_token %}
         {% if p.medico == user.profesional and p.atendido == False %}
         <div>
             <div>
-                <span class="paciente">{{ p.paciente }}</span>
-                <button type="submit">Atendido</button>
+                <span class="paciente">Paciente: {{ p.paciente }}</span>
             </div>
             <span class="fecha de atencion">{{ p.fecha_atencion }}</span>
             <span class="bloque">{{ p.bloque }}</span>

@@ -136,9 +136,6 @@ def agendar_hora(request):
 # Listado de todas las atenciones
 @login_required
 def listar_por_atender(request):
-    usuario = request.user
-    if usuario.is_staff == False or usuario.is_superuser == False:
-        return redirect(reverse('home'))
     agenda = Agenda.objects.all()
     data = {
         'pacientes': agenda
@@ -148,9 +145,6 @@ def listar_por_atender(request):
 
 @login_required
 def listar_por_atender_secretaria(request):
-    usuario = request.user
-    if usuario.is_staff == False or usuario.is_superuser == False:
-        return redirect(reverse('home'))
     agenda = Agenda.objects.all()
     data = {
         'pacientes': agenda
@@ -161,9 +155,6 @@ def listar_por_atender_secretaria(request):
 # Listado de las atenciones pendientes del dia
 @login_required
 def listar_por_atender_hoy(request):
-    usuario = request.user
-    if usuario.is_staff == False or usuario.is_superuser == False:
-        return redirect(reverse('home'))
     fecha_actual = timezone.now().date()
     agenda = Agenda.objects.all()
     agenda_hoy = [a for a in agenda if a.fecha_atencion == fecha_actual]
@@ -252,6 +243,6 @@ def generar_informe(request, medico_id):
     total = sum(valores_atencion)
     data = {
         'atenciones': atenciones_del_mes,
-        'total': total
+        'total': total,
     }
     return render(request, 'manager/informe.html', data)

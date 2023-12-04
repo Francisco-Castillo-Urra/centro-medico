@@ -5,7 +5,7 @@
   {% for medico in medicos %}
   <form method="post" action="{% url 'informe' medico_id=medico.rut_pro %}">
     {% csrf_token %}
-    <span>{{ medico.primer_nombre_pro }} - {{ medico.apellido_paterno_pro }}</span>
+    <span>{{medico.rut_pro}} - {{ medico.primer_nombre_pro }} - {{ medico.apellido_paterno_pro }}</span>
     <button type="submit">Generar informe</button>
     {% endfor %}
 {% endblock %}
