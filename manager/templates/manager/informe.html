@@ -1,9 +1,27 @@
 {% extends 'manager/base.html' %}
+{% load multiplicar %}
 {% block contenido %}
   <title>Informe</title>
-  <br /><br /><br /> <br />
+  <style>
+    .container {
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+  <br /><br /><br />
+  <div class="container">
+    <h1>Historial de atenciones</h1>
+  </div>
   {% for a in atenciones %}
-    <ul>Paciente: {{ a.paciente }} Fecha de atencion: {{a.fecha_atencion}} Tarifa de atencion: ${{a.tarifa}}</ul>
+    <div class="container">
+      <ul>Paciente: {{ a.paciente }} Fecha de atencion: {{ a.fecha_atencion }} Tarifa de atencion: ${{ a.tarifa }}</ul>
+    </div>
   {% endfor %}
-  <span>Total atenciones ${{ total }}</span>
+  <div class="container">
+    <span>Total atenciones: ${{ total }}</span>
+  </div>
+
+  <div class="container">
+    <span>Total adeudado: ${% multiplicacion total 0.3 %}</span>
+  </div>
 {% endblock %}
